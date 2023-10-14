@@ -2,11 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include<QPixmap>
-#include<QString>
-#include<QDebug>//QT 中的 printf
-#include "loginsuccess.h"
-#include "loginfail.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -19,20 +15,18 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
+public slots:
+    void setlabel1();
+    void setlabel2();
+    void setlabel3();//用户自定义信号
+    void setlabel4(QString a,int b);//用户自定义带参的信号，实现参数传递
 
-
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
+signals:
+    void mysig();
+    void mysig1(QString a,int b);
 
 private:
     Ui::MainWindow *ui;
-
-    loginsuccess *l;
-    loginfail *fail;
-    QString code;
-    QString pwd;
 };
 
 #endif // MAINWINDOW_H

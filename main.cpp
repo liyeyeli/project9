@@ -1,11 +1,11 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include "loginsuccess.h"
+
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);//创建qt应用程序
+    QApplication a(argc, argv);
     MainWindow w;
     w.show();
 
-    return a.exec();//一直轮询应用
+    return a.exec();
 }

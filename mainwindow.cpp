@@ -1,57 +1,43 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "loginsuccess.h"
+#include<QDebug>
+#include<QString>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    l = new loginsuccess(this);//子窗体在主窗体的构造函数里面new，只会在调用构造函数时初始化一次,
-                               //不能默认构造，因为默认构造传的是空指针，会导致儿子找不到父亲
-    fail = new loginfail(this);
+    connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(setlabel1()));
+    connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(setlabel2()));
+    connect(this,SIGNAL(mysig()),this,SLOT(setlabel3()));//用户自定义信号，在哪个类中就属于谁发送
+    //connect(this,SIGNAL(mysig1(QString)),this,SLOT(setlabel4(QString)));//用户自定义带参信号
+    connect(this,&MainWindow::mysig1,this,&MainWindow::setlabel4);
+    emit mysig();//发送信号
+    emit mysig1("hello world QT",10086);
+}
+//用户自定义信号
+void MainWindow::setlabel4(QString a,int b)
+{
+    QString all = QString("%1 %2").arg(a).arg(b);
+    ui->label_4->setText(all);
+    qDebug() << "传入参数为: " << all << endl;
+}
+
+void MainWindow::setlabel3()
+{
+    ui->label_3->setText("用户自定义信号成功！");
+}
+
+void MainWindow::setlabel1()
+{
+    ui->label->setText("设置标签1成功");
+}
+void MainWindow::setlabel2()
+{
+    ui->label_2->setText("设置标签2成功");
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-
-//注册按钮
-void MainWindow::on_pushButton_clicked()
-{
-    code = ui->lineEdit->text();//账号，获取lineEdit中的内容
-    pwd = ui->lineEdit_2->text();//密码，获取lineEdit_2中的内容
-
-}
-
-//登录按钮
-void MainWindow::on_pushButton_2_clicked()
-{
-    QString tmp_code = ui->lineEdit->text();
-    QString tmp_pwd = ui->lineEdit_2->text();
-    qDebug() << tmp_pwd;
-    qDebug() << tmp_code;
-    qDebug() << pwd;
-    qDebug() << code;
-    if(tmp_code == code && tmp_pwd == pwd)
-    {
-        qDebug() << "登录成功！" << endl;
-        this->hide();
-        l->show();
-
-       // QPixmap pic("D:/粤嵌创客训练营/vmshare/Ele_Picture/pic/1.bmp");//设置成功显示的图片
-       // pic = pic.scaled(ui->label_3->width(),ui->label_3->height());//将图片变成和label一样的宽高
-       // ui->label_3->setPixmap(pic);
-    }
-    else
-    {
-        qDebug() << "登录失败！" << endl;
-        this->hide();
-        fail->show();
-//        QPixmap pic1("D:/粤嵌创客训练营/vmshare/Ele_Picture/pic/20.bmp");//设置失败显示的图片
-//        pic1 = pic1.scaled(ui->label_3->width(),ui->label_3->height());
-//        ui->label_3->setPixmap(pic1);
-    }
-
 }
